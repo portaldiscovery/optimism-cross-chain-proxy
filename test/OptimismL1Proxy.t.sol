@@ -306,4 +306,19 @@ contract OptimismL1ProxyTest is Test, ITestEvents, IOptimismL1ProxyEvents {
     vm.deal(address(this), 1e18);
     address(proxy).call{value: 1e18}("");
   }
+
+  function test_updateMaxCopy() public {
+    uint16 newMaxCopy_ = 200;
+    OptimismL1Proxy proxy_ = new OptimismL1Proxy(address(this), messenger);
+
+    // Start ownership transfer.
+    messenger.setSender(address(this));
+    vm.expectEmit();
+    emit MaxCopyUpdated(proxy_.maxCopy(), newMaxCopy_);
+    messenger.sendMessage(
+      address(proxy_), abi.encodeWithSelector(OptimismL1Proxy.updateMaxCopy.selector, newMaxCopy_), 0
+    );
+
+    assertEq(proxy_.maxCopy(), newMaxCopy_);
+  }
 }

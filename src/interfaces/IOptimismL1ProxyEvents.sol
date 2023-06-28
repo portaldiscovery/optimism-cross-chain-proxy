@@ -12,6 +12,8 @@ interface IOptimismL1ProxyEvents {
   event FunctionCallSuccess(address indexed to, bytes result, bytes payload);
   // Event indicating that the function call failed.
   event FunctionCallFailed(address indexed to, bytes reason, bytes payload);
+  // Event indicating that the maxCopy has been updated.
+  event MaxCopyUpdated(uint16 previousMaxCopy, uint16 newMaxCopy);
   // Event indicating native currency has been transfered.
   event TransferSuccess(address indexed to, uint256 amount);
   // Event indicating native currency transfer has failed.
