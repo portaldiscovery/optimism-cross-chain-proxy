@@ -21,7 +21,7 @@ contract OptimismL1Proxy is IOptimismL1ProxyEvents {
   using ExcessivelySafeCall for address;
 
   // Maximum bytes to copy from the function call return.
-  uint16 constant MAX_COPY = 150;
+  uint16 public maxCopy = 150;
 
   // Error indicating that the caller of the function is unauthorized.
   error UnauthorizedCaller();
@@ -57,7 +57,7 @@ contract OptimismL1Proxy is IOptimismL1ProxyEvents {
   function executeFunction(address dst_, uint256 msgValue_, bytes calldata payload_) external onlyAuthenticatedCall {
     // The caller of the function is trusted but we still use excessivelySafeCall to ensure no
     // malicious reverts can happen.
-    (bool success, bytes memory ret) = dst_.excessivelySafeCall(gasleft(), msgValue_, MAX_COPY, payload_);
+    (bool success, bytes memory ret) = dst_.excessivelySafeCall(gasleft(), msgValue_, maxCopy, payload_);
 
     if (success) emit FunctionCallSuccess(dst_, ret, payload_);
     else emit FunctionCallFailed(dst_, ret, payload_);
@@ -69,10 +69,15 @@ contract OptimismL1Proxy is IOptimismL1ProxyEvents {
   /// @param value_ The amount of ETH to transfer. Note If the proxy does not have ETH GTE to this value, the
   /// TransferFailed event is emitted.
   function executeTransferEth(address dst_, uint256 value_) external onlyAuthenticatedCall {
-    (bool success,) = dst_.excessivelySafeCall(gasleft(), value_, MAX_COPY, "");
+    (bool success,) = dst_.excessivelySafeCall(gasleft(), value_, maxCopy, "");
 
     if (success) emit TransferSuccess(dst_, value_);
     else emit TransferFailed(dst_, value_, address(this).balance);
+  }
+
+  function updateMaxCopy(uint16 newMaxCopy_) external onlyAuthenticatedCall {
+    emit MaxCopyUpdated(maxCopy, newMaxCopy_);
+    maxCopy = newMaxCopy_;
   }
 
   /* ---- Access Control ---- */
