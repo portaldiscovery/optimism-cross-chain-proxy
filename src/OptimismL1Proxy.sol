@@ -51,8 +51,8 @@ contract OptimismL1Proxy is IOptimismL1ProxyEvents {
   /// @notice Authenticates the L1 sending address and executes the function call at the destination.
   ///
   /// @param dst_ The destination address to execute the function call against.
-  /// @param msgValue_ The msg.value value. Note that the proxy must have ETH GTE to this value or the transaction will
-  /// revert.
+  /// @param msgValue_ The msg.value value. Note If the proxy does not have ETH GTE to this value, the
+  /// FunctionCallFailed event is emitted.
   /// @param payload_ The abi encoded payload for the function call.
   function executeFunction(address dst_, uint256 msgValue_, bytes calldata payload_) external onlyAuthenticatedCall {
     // The caller of the function is trusted but we still use excessivelySafeCall to ensure no
@@ -66,8 +66,8 @@ contract OptimismL1Proxy is IOptimismL1ProxyEvents {
   /// @notice Authenticates the L1 sending address and executes the transfer to the destination.
   ///
   /// @param dst_ The destination address to transfer to.
-  /// @param value_ The amount of ETH to transfer. Note that the proxy must have ETH GTE to this value or the
-  /// transaction will revert.
+  /// @param value_ The amount of ETH to transfer. Note If the proxy does not have ETH GTE to this value, the
+  /// TransferFailed event is emitted.
   function executeTransferEth(address dst_, uint256 value_) external onlyAuthenticatedCall {
     (bool success,) = dst_.excessivelySafeCall(gasleft(), value_, MAX_COPY, "");
 
