@@ -15,16 +15,23 @@ will run all the tests in the repo.
 To deploy the OptimismL1Proxy on Optimism, use
 ```
 forge script scripts/DeployOptimismL1Proxy.sol \
---sig "run(address)" <desired L1 owner address> \ 
+--sig "run(address)" <desired L1 owner address> \
 --rpc-url <your optimism provider URL>
 ```
 to simulate the deployment transaction, and then
 ```
 forge script scripts/DeployOptimismL1Proxy.sol \
---sig "run(address)" <desired L1 owner address> \ 
+--sig "run(address)" <desired L1 owner address> \
 --rpc-url <your optimism provider URL> \
 --private-key <your private key> \
---broadcast 
+--broadcast
 ```
 to deploy the contract.
 
+# Latest deployment
+
+## Optimism
+
+| Contract   | Address |
+|----------- | --------|
+| OptimismL1Proxy | 0x4d6EC0e31c9177c696Fb49c2Ad04aB766e91F38f |
